@@ -1,19 +1,29 @@
 const Tour = require('./../models/tourModel');
 
-exports.checkBody = (req, res, next) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Missing name or price'
-    });
-  }
-  next();
-};
-
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find(); // zwraca wszystkie jak nie ma nic w find
+    //BUILD QUERY
+    // 1) Filtering
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach(el => delete queryObj[el]);
+    console.log(req.query, queryObj);
 
+    // 2) Advanced Filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    console.log(JSON.parse(queryStr));
+
+    const query = await Tour.find(JSON.parse(queryStr)); // zwraca wszystkie jak nie ma nic w find
+    // const query = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    //EXECUTE QUERY
+    const tours = await query;
+    //SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
