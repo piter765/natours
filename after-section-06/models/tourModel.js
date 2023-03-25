@@ -48,10 +48,13 @@ const tourSchema = new mongoose.Schema({
   images: [String], // array of Strings
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
+    select: false
   },
   startDates: [Date] // moga byc na przyklad w styczniu , marcu i grudniu
 });
+
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
