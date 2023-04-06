@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const slugify = require('slugify');
-const User = require('./userModel');
+//const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -104,7 +104,10 @@ const tourSchema = new mongoose.Schema(
       }
     ],
     guides: [
-      type: mongoose.Schema.ObjectId
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
     ]
   },
   {
@@ -145,11 +148,20 @@ tourSchema.pre(/^find/, function(next) {
   next();
 });
 
+tourSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt'
+  });
+  next();
+});
+
 tourSchema.post(/^find/, function(docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
   console.log(docs);
   next();
 });
+
 //AGGREGATION MIDDLEWARE
 tourSchema.pre('aggregate', function(next) {
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
