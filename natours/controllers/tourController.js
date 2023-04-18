@@ -163,7 +163,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
       }
     }
   ]);
-  console.log(distances);
+  //console.log(distances);
   res.status(200).json({
     status: 'success',
     results: distances.length,
