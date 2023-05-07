@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function(next) {
-  //Only run this function is password was actually modified
+  //Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
@@ -104,11 +104,8 @@ userSchema.methods.createPasswordResetToken = function() {
 
   //console.log({ resetToken }, this.passwordRestToken);
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000 * 100; //in milliseconds
-  console.log('password reset token');
   console.log(this.passwordResetToken);
-  console.log("przed");
   console.log(this.passwordResetExpires);
-  console.log('po');
   return resetToken;
 };
 const User = mongoose.model('User', userSchema);
