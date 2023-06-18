@@ -14,7 +14,7 @@ const app = require('./app');
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
 // );
-const DB = process.env.DATABASE;
+const DB = process.env.DATABASE.toString();
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
