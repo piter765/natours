@@ -19,7 +19,6 @@ module.exports = class Email {
         auth: {
           user: process.env.SENDGRID_USERNAME,
           pass: process.env.SENDGRID_PASSWORD
-
         }
       });
     }
